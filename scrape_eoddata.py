@@ -26,20 +26,18 @@ stockValues = [[] for i in range(7)]
 
 scrapeValue = table.findNext('td')
 
-while scrapeValue.text != 'AZZ':
+#The first value after the table is "MEMBER LOGIN", so stop when we have scraped that far
+while scrapeValue.text != 'MEMBER LOGIN':
 	for i in range(7):
 		stockValues[i].append(scrapeValue.text)
 		scrapeValue = scrapeValue.findNext('td')
 
-	print scrapeValue.text
 	scrapeValue = scrapeValue.findNext('td')
-	print scrapeValue.text
 	scrapeValue = scrapeValue.findNext('td')
-	print scrapeValue.text
 	scrapeValue = scrapeValue.findNext('td')
-	print scrapeValue.text
 
 for i in stockValues:
 	print i
+
 print 'Process complete.'
 
