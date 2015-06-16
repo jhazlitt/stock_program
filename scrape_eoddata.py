@@ -1,10 +1,12 @@
 #This scrapes symbols from eoddata.com/stocklist/NYSE/
 
 import sys
+import sqlite3
 import requests
 from bs4 import BeautifulSoup
 
-stockValues = [[] for i in range(7)]
+scrapedStock = []
+stockList = [[]]
 
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
@@ -31,15 +33,23 @@ for letter in alphabet:
 	#The first value after the table is "MEMBER LOGIN", so stop when we have scraped that far
 	while scrapeValue.text != 'MEMBER LOGIN':
 		for i in range(7):
-			stockValues[i].append(scrapeValue.text)
+			scrapedStock.append(scrapeValue.text)
 			scrapeValue = scrapeValue.findNext('td')
+		
+		stockList.append(scrapedStock)
+		scrapedStock = []
 
 		scrapeValue = scrapeValue.findNext('td')
 		scrapeValue = scrapeValue.findNext('td')
 		scrapeValue = scrapeValue.findNext('td')
 
-for i in stockValues:
-	print i
+stockList.pop(0)
 
+conn = sqlite3.connect('/home/john/stock_database.db')
+c = conn.cursor()
+for stock in stockList:
+	c.execute('insert into symbols values (?,?,?,?,?,?,?)',stock)
+
+conn.commit()
 print 'Process complete.'
 
