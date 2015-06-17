@@ -1,4 +1,4 @@
-#This scrapes symbols from eoddata.com/stocklist/NYSE/
+#This scrapes symbols from finance.yahoo.com
 
 import sys
 import sqlite3
