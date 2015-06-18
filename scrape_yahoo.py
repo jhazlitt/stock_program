@@ -35,17 +35,20 @@ for code in codeList:
 	try:
 		firstValue = table.find('tr')
 	except:
-		pass
+		continue
 
 	#This is pretty goofy, it looks through all these rows to find the P/E.  There is probably a better way to write this
 	PE = firstValue.findNext('tr').findNext('tr').findNext('tr').findNext('tr').findNext('tr').findNext('tr').findNext('tr').findNext('tr').findNext('tr').findNext('tr').findNext('tr').findNext('tr')
 
-	#Check to make sure PE is actually looking at the P/E row before getting the P/E value
+	#Check to make sure PE is actually looking at the P/E row before getting the P/E value.  This is also going to skip any N/A values and not add them to the database
 	if 'P/E' not in PE.text:
-		print 'Error detected.'
-		print code
-		print PE.text
-		sys.exit()
+		#print 'Error detected.'
+		#print code
+		#print PE.text
+		#sys.exit()
+		continue
+	elif 'N/A' in PE.text:
+		continue			
 
 	PE = PE.findNext('td').text
 
@@ -56,10 +59,11 @@ for code in codeList:
 
 	peList.append(scrapedRow)
 	scrapedRow = []
-#conn = sqlite3.connect('/home/john/stock_database.db')
-#c = conn.cursor()
-#for scrapedPE in peList:
-#	c.execute('insert into stock_pe values (?,?,?,?,?,?,?)',stock)
-#conn.commit()
+
+conn = sqlite3.connect('/home/john/stock_database.db')
+c = conn.cursor()
+for scrapedPE in peList:
+	c.execute('insert into stock_pe values (?,?)',scrapedPE)
+conn.commit()
 print 'Yahoo scrape complete.'
 
