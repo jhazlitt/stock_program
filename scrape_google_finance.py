@@ -1,5 +1,6 @@
 #This scrapes balance sheet information from Google Finance
 
+import string
 import sys
 import sqlite3
 import requests
@@ -42,11 +43,15 @@ for item in codeList:
 		continue
 	
 	scrapedValue = header.findNext('td')
-	scrapedSheet.append(scrapedValue.text)
+	stringValue = str(scrapedValue.text)
+	stringValue = stringValue.replace(',','')
+	scrapedSheet.append(stringValue)
 	#The last row that needs to be scraped is 'Total Common Shares Outstanding', which is why the loop stops there
 	while 'Total Common Shares Outstanding' not in scrapedValue.text:
 		scrapedValue = scrapedValue.findNext('tr')
-		scrapedSheet.append(scrapedValue.findNext('td').findNext('td').text)
+		stringValue = str(scrapedValue.findNext('td').findNext('td').text)
+		stringValue = stringValue.replace(',','')
+		scrapedSheet.append(stringValue)
 
 	#There should be 43 elements in scrapedSheet, otherwise something went wrong
 	if len(scrapedSheet) != 43:
