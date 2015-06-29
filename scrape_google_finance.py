@@ -21,7 +21,12 @@ for item in codeList:
 	print exchange
 	print code
 	address = 'https://www.google.com/finance?fstype=ii&q=' + exchange + ':' + code + ''
-	r = requests.get(address)
+
+	try:
+		r = requests.get(address)
+	except:
+		continue
+
 	soup = BeautifulSoup(r.content)
 #
 #	#The table I'm interested in is the third one with id='fs-table', that's why I find the first one and then findNext two more times

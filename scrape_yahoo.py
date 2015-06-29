@@ -47,8 +47,8 @@ for code in codeList:
 	elif 'N/A' in PE.text:
 		continue			
 
-	PE = PE.findNext('td').text
-
+	PE = str(PE.findNext('td').text)
+	PE = PE.replace(',','')
 	scrapedRow.append(code)
 	scrapedRow.append(PE)
 
